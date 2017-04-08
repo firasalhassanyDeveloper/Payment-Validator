@@ -1,4 +1,4 @@
-package nl.rabo.app.service.validator;
+package nl.rabo.app.service;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -7,35 +7,37 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import nl.rabo.app.model.Payment;
 
-public class PaymentValidatorImpl implements PaymentValidator<List<Payment>> {
-	private final static Logger LOGGER = LoggerFactory.getLogger(PaymentValidatorImpl.class);
+@Service
+public class PaymentValidator{
+	private final static Logger LOGGER = LoggerFactory.getLogger(PaymentValidator.class);
 
-	public List<PaymentsValidationError> validate(List<Payment> payments, List<PaymentsValidationError> errors) {
+	public List<ValidationError> validate(List<Payment> payments, List<ValidationError> errors) {
 		LOGGER.info("Validate list of payment");
 		validateBalance(payments, errors);
 		validateUnique(payments, errors);
 		return errors;
 	}
 
-	private static List<PaymentsValidationError> validateBalance(List<Payment> payments,
-			List<PaymentsValidationError> errors) {
+	private static List<ValidationError> validateBalance(List<Payment> payments,
+			List<ValidationError> errors) {
 		LOGGER.info("Validate end balance for every payment");
 		for (Payment payment : payments) {
 			if (preValidation(payment)) {
-				errors.add(new PaymentsValidationError(FieldName.REFERENC, "Payment missing mandatory balance value."));
+				errors.add(new ValidationError(payment.getReference(), "Payment missing mandatory balance value."));
 			} else if (invalidateEndBalance(payment)) {
-				errors.add(new PaymentsValidationError(FieldName.END_BELANCE, "End balance is not correct."));
+				errors.add(new ValidationError(payment.getReference(), "End balance is not correct."));
 			}
 		}
 		LOGGER.info("Errors found = "+ errors.size());
 		return errors;
 	}
 
-	private static List<PaymentsValidationError> validateUnique(List<Payment> payments,
-			List<PaymentsValidationError> errors) {
+	private static List<ValidationError> validateUnique(List<Payment> payments,
+			List<ValidationError> errors) {
 		{
 			final Set<Payment> setToReturn = new HashSet<>();
 			final Set<Integer> set1 = new HashSet<>();
@@ -45,8 +47,8 @@ public class PaymentValidatorImpl implements PaymentValidator<List<Payment>> {
 					setToReturn.add(yourPayment);
 				}
 			}
-			for (Payment p : setToReturn) {
-				errors.add(new PaymentsValidationError("Duplicitaed payment with id = " + p.getReference()));
+			for (Payment payment : setToReturn) {
+				errors.add(new ValidationError(payment.getReference(), "Duplicitaed payment"));
 			}
 			return errors;
 		}

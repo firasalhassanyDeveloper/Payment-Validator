@@ -1,4 +1,4 @@
-package nl.rabo.app.service.validator;
+package nl.rabo.app.service;
 
 public enum FieldName {
 	REFERENC,

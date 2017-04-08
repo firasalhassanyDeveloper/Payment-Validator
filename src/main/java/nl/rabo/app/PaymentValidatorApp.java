@@ -3,15 +3,16 @@ package nl.rabo.app;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.annotation.ComponentScan;
 
-@RestController
+
+
 @EnableAutoConfiguration
 @SpringBootApplication
+@ComponentScan(basePackages = {"nl.rabo.app.service"})
 public class PaymentValidatorApp {
-
-
-	public static void main(String []args) {
+	
+	public static void main(String[] args) {
 		SpringApplication.run(PaymentValidatorApp.class, args);
 	}
 }
