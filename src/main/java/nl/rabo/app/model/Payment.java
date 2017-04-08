@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-
-
 @XmlType
 public class Payment {
 	
