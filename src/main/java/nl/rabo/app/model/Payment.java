@@ -58,4 +58,12 @@ public class Payment {
 		this.endBalance = endBalance;
 	}
 	
+	@Override
+    public String toString() {
+        return "Payment [Reference=" + reference + ", Account number="
+                + accountNumber + ", Description=" + description + ", Start Balance ="
+                + startBalance + ", Muation=" + mutation + " , End Balance =" + endBalance + "]";
+    }
+	
+	
 }

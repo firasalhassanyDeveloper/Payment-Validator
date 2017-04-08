@@ -8,14 +8,14 @@ import javax.xml.bind.JAXBException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import nl.rabo.app.model.Payment;
-import nl.rabo.app.service.parser.XMLParser;
+import nl.rabo.app.service.parser.XmlParser;
 import nl.rabo.app.service.validator.PaymentValidator;
 import nl.rabo.app.service.validator.PaymentsValidationError;
 
 public class PaymentValidatorServiceImpl implements PaymentValidatorService {
 
 	@Autowired
-	private XMLParser xmlParser;
+	private XmlParser xmlParser;
 	
 	@Autowired
 	private PaymentValidator<List<Payment>> paymentValidator;
