@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.ParseBigDecimal;
 import org.supercsv.cellprocessor.ParseInt;
@@ -18,19 +20,25 @@ import org.supercsv.prefs.CsvPreference;
 import nl.rabo.app.model.Payment;
 @Component
 public class CsvParsere {
-	
+	private final Logger LOGGER = LoggerFactory.getLogger(CsvParsere.class);
+
 	   public List<Payment> parseXml() throws FileNotFoundException, IOException  {
+		   LOGGER.info("Start parsing CVS file");
 		   List<Payment> listOfPayments = new ArrayList<>();
 		 	File file = new File(CsvParsere.class.getClass().getResource("/records.csv").getFile());
-			try(ICsvBeanReader beanReader = new CsvBeanReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE)){
-	            	beanReader.getHeader(true);
+			try(ICsvBeanReader beanReader = new CsvBeanReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE))
+			{
+				beanReader.getHeader(true);
 	            final CellProcessor[] processors = getProcessors();
 	            final String[] fieldMapping = new String[] { "reference", "accountNumber", "description", "startBalance", "mutation", "endBalance"};
 	            Payment payment;
+	 		   LOGGER.info("Read rows in the CSV file");
 	            while ((payment = beanReader.read(Payment.class, fieldMapping, processors)) != null){
 	            	listOfPayments.add(payment);
 	            }
 			};
+		    
+			LOGGER.info("Number of Payments in CVS file = " + listOfPayments.size());
 			return listOfPayments;
     };
 	 
@@ -38,7 +46,7 @@ public class CsvParsere {
 	          final CellProcessor[] processors = new CellProcessor[] {
 	                new NotNull(new ParseInt()), // reference
 	                new NotNull(), // account number
-	                new NotNull(), // discreption
+	                new NotNull(), // description
 	                new NotNull(new ParseBigDecimal()), // start balance
 	                new NotNull(new ParseBigDecimal()), // mutation
 	                new NotNull(new ParseBigDecimal()), // end balance

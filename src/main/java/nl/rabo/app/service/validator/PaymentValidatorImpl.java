@@ -5,12 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.rabo.app.model.Payment;
 
 public class PaymentValidatorImpl implements PaymentValidator<List<Payment>> {
+	private final static Logger LOGGER = LoggerFactory.getLogger(PaymentValidatorImpl.class);
 
-	@Override
 	public List<PaymentsValidationError> validate(List<Payment> payments, List<PaymentsValidationError> errors) {
+		LOGGER.info("Validate list of payment");
 		validateBalance(payments, errors);
 		validateUnique(payments, errors);
 		return errors;
@@ -18,6 +22,7 @@ public class PaymentValidatorImpl implements PaymentValidator<List<Payment>> {
 
 	private static List<PaymentsValidationError> validateBalance(List<Payment> payments,
 			List<PaymentsValidationError> errors) {
+		LOGGER.info("Validate end balance for every payment");
 		for (Payment payment : payments) {
 			if (preValidation(payment)) {
 				errors.add(new PaymentsValidationError(FieldName.REFERENC, "Payment missing mandatory balance value."));
@@ -25,14 +30,15 @@ public class PaymentValidatorImpl implements PaymentValidator<List<Payment>> {
 				errors.add(new PaymentsValidationError(FieldName.END_BELANCE, "End balance is not correct."));
 			}
 		}
+		LOGGER.info("Errors found = "+ errors.size());
 		return errors;
 	}
 
 	private static List<PaymentsValidationError> validateUnique(List<Payment> payments,
 			List<PaymentsValidationError> errors) {
 		{
-			final Set<Payment> setToReturn = new HashSet();
-			final Set<Integer> set1 = new HashSet();
+			final Set<Payment> setToReturn = new HashSet<>();
+			final Set<Integer> set1 = new HashSet<>();
 
 			for (Payment yourPayment : payments) {
 				if (!set1.add(yourPayment.getReference())) {
