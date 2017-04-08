@@ -17,9 +17,9 @@ import nl.rabo.app.model.PaymentsList;
 @Component
 public class XmlParser {
 	
-	private final Logger LOGGER = LoggerFactory.getLogger(XmlParser.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(XmlParser.class);
 	
-	public List<Payment> parseXml(File file) {
+	public static List<Payment> parseXml(File file) {
 		LOGGER.info("Start parsing xml file");
 			//File file = new File(XmlParser.class.getClass().getResource("/records.xml").getFile());
 			JAXBContext jaxbContext;

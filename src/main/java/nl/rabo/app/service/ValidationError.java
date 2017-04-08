@@ -28,5 +28,10 @@ public class ValidationError {
 	public void setRefernce(Integer refernce) {
 		this.refernce = refernce;
 	}
-
+	@Override
+    public String toString() {
+        return "Error [Reference=" + refernce + ", Error is ="
+                + errorMessage + "]";
+    }
+	
 }
